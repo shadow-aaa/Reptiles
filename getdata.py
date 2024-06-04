@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import requests
 from bs4 import BeautifulSoup
-import csv
+import pandas as pd
 headers = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
     'Chrome/72.0.3626.109 Safari/537.36'}
@@ -27,8 +27,6 @@ def geturl():
 datalist=[]
 getfoodname()
 mydict={}
-mytuple=tuple(datalist)
-mydict['test']=mytuple
-with open('./test.csv','w',newline='') as file:
-    writer = csv.DictWriter(file,fieldnames=mydict)
-
+data=["this is a test"]
+df = pd.read_csv("test.csv")
+df.info()
