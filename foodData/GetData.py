@@ -2,7 +2,6 @@
 import requests
 import csv
 import re
-import matplotlib.pyplot as plt  # 暂未使用的库
 import lxml.etree
 import numpy as np
 
@@ -40,7 +39,7 @@ def dataWriteToCsv(filename, data, headers=None, isHeaders=False):
         headers = []
     try:
         # 打开CSV文件，以追加模式写入
-        with open(filename, 'a', encoding='utf-8', newline='') as f:
+        with open(filename, 'a', encoding='utf-8-sig', newline='') as f:
             writer = csv.writer(f)
             # 是否写入标题头
             if isHeaders:
