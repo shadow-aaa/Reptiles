@@ -73,8 +73,6 @@ def getdatanumber(num):
     # 嵌套列表
 
 # 获取表头也就是第一行
-
-
 def getheaders():
     head = []
     headers = {
@@ -100,8 +98,7 @@ def datatocsv(foodkindid, foodkind, foodname, datanumber, head):
             for j, value in enumerate(data):
                 temp.iloc[i, j + 2] = value
     df = pd.concat([df, temp], ignore_index=True)
-    # df.to_csv("d:\\github_code\\Reptiles\\test.csv",encoding="utf_8_sig",index=False)
-    # print(df)
+    df.to_csv("d:\\github_code\\Reptiles\\test.csv",encoding="utf_8_sig",index=False)
 
 
 head = getheaders()
