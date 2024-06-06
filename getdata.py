@@ -56,35 +56,59 @@ def getdatanumber(num):
     headers = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
         'Chrome/72.0.3626.109 Safari/537.36'}
-    numbers=[]
+    numbers = []
     for url in urllist:
         baseurl = "http://db.foodmate.net/yingyang/"
         url = baseurl+url
         response = requests.get(url=url, headers=headers)
         soup = BeautifulSoup(response.text, "html.parser")
         a = soup.find_all("div", class_="list")
+        templist = []
         for b in a:
-            c=b.find("div",class_="list_m")
-            number=b.text.replace(c.text,'').strip()
-            numbers.append(number)
-    print(numbers)
-        # 应该有嵌套列表
+            c = b.find("div", class_="list_m")
+            number = b.text.replace(c.text, '').strip()
+            templist.append(number)
+        numbers.append(templist)
+    return numbers
+    # 应该有嵌套列表
 
 
-def datatocsv(foodkindid, foodkind, foodname):
+def getheaders():
+    head = []
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+        'Chrome/72.0.3626.109 Safari/537.36'}
+    url = "http://db.foodmate.net/yingyang/type_0%3A1%3A0_1.html"
+    response = requests.get(url=url, headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    a = soup.find_all("div", class_="list")
+    for b in a:
+        c = b.find("div", class_="list_m")
+        head.append(c.string)
+    return head
+
+
+def datatocsv(foodkindid, foodkind, foodname, datanumber, head):
     global df
-    temp = pd.DataFrame()
+    temp = pd.DataFrame(columns=head)
     temp['名字'] = foodname
     temp['分类'] = foodkind[foodkindid-1]
+    for i, data in enumerate(datanumber):
+        if i < len(temp):
+            for j, value in enumerate(data):
+                temp.iloc[i, j + 2] = value
     df = pd.concat([df, temp], ignore_index=True)
     # df.to_csv("d:\\github_code\\Reptiles\\test.csv",encoding="utf_8_sig",index=False)
     print(df)
 
 
-# df = pd.DataFrame(columns=['名字', '分类'])
+head = getheaders()
+head.insert(0, '分类')
+head.insert(0, '名字')
+df = pd.DataFrame(columns=head)
 for i in range(1):
     getdatanumber(i+1)
-#     foodkind = getfoodkind(i+1)
-#     foodname = getfoodname(i+1)
-#     datatocsv(i+1, foodkind, foodname)
-# geturl()
+    foodkind = getfoodkind(i+1)
+    foodname = getfoodname(i+1)
+    datanumber = getdatanumber(i+1)
+    datatocsv(i+1, foodkind, foodname, datanumber, head)
