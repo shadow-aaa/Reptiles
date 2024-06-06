@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-
+# 大量复用代码分割出来的请求网页函数
 def getdata(url, tag):
     headers = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -41,7 +41,7 @@ def getfoodkind(num):
             temp += 1
     return kindfood
 
-
+# 从主页面到具体数据页面的函数
 def geturl(num):
     url = f"http://db.foodmate.net/yingyang/type_{num}.html"
     temp = getdata(url=url, tag="dibu")
@@ -50,7 +50,7 @@ def geturl(num):
         urllist.append(c.get("href"))
     return urllist
 
-
+# 获取数据页面数据
 def getdatanumber(num):
     urllist = geturl(num=num)
     headers = {
@@ -70,7 +70,9 @@ def getdatanumber(num):
             templist.append(number)
         numbers.append(templist)
     return numbers
-    # 应该有嵌套列表
+    # 嵌套列表
+
+# 获取表头也就是第一行
 
 
 def getheaders():
@@ -87,7 +89,7 @@ def getheaders():
         head.append(c.string)
     return head
 
-
+# 写入csv表格
 def datatocsv(foodkindid, foodkind, foodname, datanumber, head):
     global df
     temp = pd.DataFrame(columns=head)
@@ -99,15 +101,14 @@ def datatocsv(foodkindid, foodkind, foodname, datanumber, head):
                 temp.iloc[i, j + 2] = value
     df = pd.concat([df, temp], ignore_index=True)
     # df.to_csv("d:\\github_code\\Reptiles\\test.csv",encoding="utf_8_sig",index=False)
-    print(df)
+    # print(df)
 
 
 head = getheaders()
 head.insert(0, '分类')
 head.insert(0, '名字')
 df = pd.DataFrame(columns=head)
-for i in range(1):
-    getdatanumber(i+1)
+for i in range(20):
     foodkind = getfoodkind(i+1)
     foodname = getfoodname(i+1)
     datanumber = getdatanumber(i+1)
