@@ -4,8 +4,6 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 # 大量复用代码分割出来的请求网页函数
-
-
 def getdata(url, tag):
     headers = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -44,8 +42,6 @@ def getfoodkind(num):
     return kindfood
 
 # 从主页面到具体数据页面的函数
-
-
 def geturl(num):
     url = f"http://db.foodmate.net/yingyang/type_{num}.html"
     temp = getdata(url=url, tag="dibu")
@@ -54,9 +50,8 @@ def geturl(num):
         urllist.append(c.get("href"))
     return urllist
 
+
 # 获取数据页面数据
-
-
 def getdatanumber(num):
     urllist = geturl(num=num)
     headers = {
@@ -79,8 +74,6 @@ def getdatanumber(num):
     # 嵌套列表
 
 # 获取表头也就是第一行
-
-
 def getheaders():
     head = []
     headers = {
